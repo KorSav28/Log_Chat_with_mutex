@@ -1,11 +1,11 @@
-#include <iostream> // ввод-вывод
-#include <string> // строки
-#include <thread> // потоки
-#include <vector> // векторы
-#include <algorithm> // алгоритмы
-#include <winsock2.h> // для работы с сокетами в Windows
-#include <ws2tcpip.h> // для работы с TCP/IP в Windows
-#include <shared_mutex> // работа с shared_mutex
+#include <iostream> // РІРІРѕРґ-РІС‹РІРѕРґ
+#include <string> // СЃС‚СЂРѕРєРё
+#include <thread> // РїРѕС‚РѕРєРё
+#include <vector> // РІРµРєС‚РѕСЂ
+#include <algorithm> // Р°Р»РіРѕСЂРёС‚РјС‹
+#include <winsock2.h> // РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ СЃРѕРєРµС‚Р°РјРё РІ Windows
+#include <ws2tcpip.h> // РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ TCP/IP РІ Windows
+#include <shared_mutex> // СЂР°Р±РѕС‚Р° СЃ shared_mutex
 #include "logger.h"
 
 #pragma comment(lib, "ws2_32.lib")
@@ -15,7 +15,7 @@
 std::vector<SOCKET> clients;
 std::shared_mutex clients_mutex;
 
-void broadcast(const std::string& message, SOCKET sender) { //отправка сообщения всем клиентам кроме отправителя
+void broadcast(const std::string& message, SOCKET sender) { //РѕС‚РїСЂР°РІРєР° СЃРѕРѕР±С‰РµРЅРёСЏ РІСЃРµРј РєР»РёРµРЅС‚Р°Рј РєСЂРѕРјРµ РѕС‚РїСЂР°РІРёС‚РµР»СЏ
     clients_mutex.lock_shared();
     for (SOCKET client : clients) {
         if (client != sender) {
@@ -25,14 +25,14 @@ void broadcast(const std::string& message, SOCKET sender) { //отправка сообщения
     clients_mutex.unlock_shared();
 }
 
-void handle_client(SOCKET client_socket, Logger& logger) { // обработка соединения с клиентом 
+void handle_client(SOCKET client_socket, Logger& logger) { // РѕР±СЂР°Р±РѕС‚РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ СЃ РєР»РёРµРЅС‚РѕРј 
     char buffer[1024];
     while (true) {
-        int bytes = recv(client_socket, buffer, sizeof(buffer) - 1, 0); //получение данных от клиента
+        int bytes = recv(client_socket, buffer, sizeof(buffer) - 1, 0); //РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… РѕС‚ РєР»РёРµРЅС‚Р°
         if (bytes <= 0) break;
 
         buffer[bytes] = '\0';
-        std::string msg = "Client " + std::to_string((int)client_socket) + ": " + buffer; //формирование сообщения
+        std::string msg = "Client " + std::to_string((int)client_socket) + ": " + buffer; //С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ
         std::cout << msg << std::endl;
         logger.write_Log(msg);
         broadcast(msg, client_socket);
@@ -42,7 +42,7 @@ void handle_client(SOCKET client_socket, Logger& logger) { // обработка соединен
     logger.write_Log("Client disconnected: " + std::to_string((int)client_socket));
 
     clients_mutex.lock(); 
-    clients.erase(std::remove(clients.begin(), clients.end(), client_socket), clients.end()); // удаление клиента 
+    clients.erase(std::remove(clients.begin(), clients.end(), client_socket), clients.end()); // СѓРґР°Р»РµРЅРёРµ РєР»РёРµРЅС‚Р° 
     clients_mutex.unlock(); 
 }
 
@@ -66,7 +66,7 @@ void run_server() {
         SOCKET client_socket = accept(server_fd, nullptr, nullptr);
             
             clients_mutex.lock(); 
-            clients.push_back(client_socket); //добавление клиента в вектор
+            clients.push_back(client_socket); //РґРѕР±Р°РІР»РµРЅРёРµ РєР»РёРµРЅС‚Р° РІ РІРµРєС‚РѕСЂ
             clients_mutex.unlock();
 
         logger.write_Log("New client connected.");
