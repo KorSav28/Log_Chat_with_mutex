@@ -12,7 +12,7 @@
 
 std::shared_mutex socket_mutex;
 
-void receive_thread(SOCKET sock, Logger& logger) { // прием сообщения
+void receive_thread(SOCKET sock, Logger& logger) { // РїСЂРёРµРј СЃРѕРѕР±С‰РµРЅРёСЏ
     char buffer[1024];
     while (true) {
         
@@ -59,7 +59,7 @@ void run_client() {
     }
 
     closesocket(sock);
-    receiver.detach(); // отсоединение потока
+    receiver.detach(); // РѕС‚СЃРѕРµРґРёРЅРµРЅРёРµ РїРѕС‚РѕРєР°
     WSACleanup();
 }
 
