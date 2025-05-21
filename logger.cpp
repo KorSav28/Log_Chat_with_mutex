@@ -1,7 +1,7 @@
 #include "logger.h"
 #include <fstream>
 
-Logger::Logger(const std::string& filename) : log_filename(filename), log_file(filename, std::ios::app) // std::ios::app - флаг, указывающий, что файл должен быть открыт в режиме добавления
+Logger::Logger(const std::string& filename) : log_filename(filename), log_file(filename, std::ios::app) // std::ios::app - С„Р»Р°Рі, СѓРєР°Р·С‹РІР°СЋС‰РёР№, С‡С‚Рѕ С„Р°Р№Р» РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕС‚РєСЂС‹С‚ РІ СЂРµР¶РёРјРµ РґРѕР±Р°РІР»РµРЅРёСЏ
 {
     if (!log_file.is_open()) {
         throw std::runtime_error("Failed to open log file");
